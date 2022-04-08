@@ -27,8 +27,7 @@ jobs:
         conda install pytest
         pip install virtualenv --upgrade
         python setup.py install
-        apt update
-        apt install nodejs npm
+        pip install nodejs npm
         npm ci
         npm run clean
         npm run build
