@@ -20,10 +20,7 @@ jobs:
              sudo pip install virtualenv --upgrade
              python -m venv venv || virtualenv venv
              python3 setup.py install 
-             npm ci
-             npm run clean
-             npm run build
-             npm run test
+             python -m pytest
   build-medium-arm64:
     machine:
       image: ubuntu-2004:202101-01
@@ -41,10 +38,7 @@ jobs:
              sudo pip install virtualenv --upgrade
              python -m venv venv || virtualenv venv
              python3 setup.py install 
-             npm ci
-             npm run clean
-             npm run build
-             npm run test
+             python -m pytest
              
 workflows:
   version: 2
