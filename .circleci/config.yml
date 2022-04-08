@@ -20,6 +20,7 @@ jobs:
              sudo pip install virtualenv --upgrade
              python -m venv venv || virtualenv venv
              python3 setup.py install 
+             pip install pytest
              python -m pytest
   build-medium-arm64:
     machine:
@@ -37,7 +38,8 @@ jobs:
              pip3 install --upgrade pip
              sudo pip install virtualenv --upgrade
              python -m venv venv || virtualenv venv
-             python3 setup.py install 
+             python3 setup.py install
+             pip install pytest
              python -m pytest
              
 workflows:
