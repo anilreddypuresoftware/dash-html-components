@@ -1,0 +1,48 @@
+version: 2.1
+orbs:
+  win: circleci/windows@2.4.0
+jobs:
+  
+  build-medium-arm64:
+    machine:
+      image: ubuntu-2004:202101-01
+    resource_class: arm.medium
+    working_directory: ~/dash
+    steps:
+      - run: uname -a
+      - run: echo "Hello, Arm!"
+      
+      - run:
+          name: ️️🏗️ pip dev requirements
+          command: |
+            uname -m
+            sudo pip install virtualenv --upgrade
+            python -m venv venv || virtualenv venv
+            . venv/bin/activate
+            npm ci
+            
+            
+            git clone --depth 1 git@github.com:plotly/dash.git dash-main
+            git clone --depth 1 git@github.com:plotly/dash-core-components.git
+            git clone --depth 1 git@github.com:plotly/dash-table.git
+            . venv/bin/activate
+            pip install -e ./dash-main[testing,dev] --quiet
+            cd dash-core-components && npm ci && npm run build && pip install -e . && cd ..
+            cd dash-main/dash-renderer && npm run build && pip install -e . && cd ../..
+            cd dash-table && npm ci && npm run build && pip install -e . && cd ..
+            
+            . venv/bin/activate
+            python --version
+            npm run clean
+            npm run build    
+      
+  
+
+    
+      - run:
+          
+          command: |
+            . venv/bin/activate
+            npm run test
+  
+
