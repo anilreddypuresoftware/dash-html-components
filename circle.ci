@@ -1,48 +1,55 @@
 version: 2.1
-orbs:
-  win: circleci/windows@2.4.0
+
 jobs:
   
+  build-medium-amd64:
+    machine:
+      image: ubuntu-2004:202101-01
+   
+    working_directory: ~/python-lz4
+    steps:
+      
+      
+      - checkout
+      - run:
+          name: ️️🏗️ pip dev requirements
+          command: |
+             uname -m 
+             sudo apt-get update && sudo apt-get -y install python3 python3-pip 
+             pip3 install --upgrade pip
+             sudo pip install virtualenv --upgrade
+             python -m venv venv || virtualenv venv
+             python3 setup.py install 
+             npm ci
+             npm run clean
+             npm run build
+             npm run test
   build-medium-arm64:
     machine:
       image: ubuntu-2004:202101-01
     resource_class: arm.medium
-    working_directory: ~/dash
+    working_directory: ~/python-lz4
     steps:
-      - run: uname -a
-      - run: echo "Hello, Arm!"
       
+      - checkout
       - run:
           name: ️️🏗️ pip dev requirements
           command: |
-            uname -m
-            sudo pip install virtualenv --upgrade
-            python -m venv venv || virtualenv venv
-            . venv/bin/activate
-            npm ci
-            
-            
-            git clone --depth 1 git@github.com:plotly/dash.git dash-main
-            git clone --depth 1 git@github.com:plotly/dash-core-components.git
-            git clone --depth 1 git@github.com:plotly/dash-table.git
-            . venv/bin/activate
-            pip install -e ./dash-main[testing,dev] --quiet
-            cd dash-core-components && npm ci && npm run build && pip install -e . && cd ..
-            cd dash-main/dash-renderer && npm run build && pip install -e . && cd ../..
-            cd dash-table && npm ci && npm run build && pip install -e . && cd ..
-            
-            . venv/bin/activate
-            python --version
-            npm run clean
-            npm run build    
+             uname -m 
+             sudo apt-get update && sudo apt-get -y install python3 python3-pip 
+             pip3 install --upgrade pip
+             sudo pip install virtualenv --upgrade
+             python -m venv venv || virtualenv venv
+             python3 setup.py install 
+             npm ci
+             npm run clean
+             npm run build
+             npm run test
+             
+workflows:
+  version: 2
+  python3.8:
+    jobs:
       
-  
-
-    
-      - run:
-          
-          command: |
-            . venv/bin/activate
-            npm run test
-  
-
+      - build-medium-amd64
+      - build-medium-arm64
